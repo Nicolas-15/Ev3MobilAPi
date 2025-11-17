@@ -1,7 +1,7 @@
 package com.example.proyecto2.data
 
 import com.example.proyecto2.R
-import com.example.proyecto2.model.Producto
+import com.example.proyecto2.data.model.Producto
 
 // Esta clase nos dará una lista de productos para probar la UI.
 object FakeProductDataSource {

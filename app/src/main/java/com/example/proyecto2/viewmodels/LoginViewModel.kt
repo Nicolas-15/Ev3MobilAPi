@@ -1,9 +1,9 @@
 // En: app/src/main/java/com/example/proyecto2/ui/viewmodels/LoginViewModel.kt
-package com.example.proyecto2.ui.viewmodels
+package com.example.proyecto2.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.proyecto2.data.dataStore.UserPreferencesRepository
+import com.example.proyecto2.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first

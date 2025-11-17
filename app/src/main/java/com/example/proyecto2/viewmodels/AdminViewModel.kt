@@ -1,10 +1,11 @@
 // Contenido para: app/src/main/java/com/example/proyecto2/ui/viewmodels/AdminViewModel.kt
 
-package com.example.proyecto2.ui.viewmodels
+package com.example.proyecto2.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.example.proyecto2.R
 import com.example.proyecto2.data.FakeProductDataSource
-import com.example.proyecto2.model.Producto
+import com.example.proyecto2.data.model.Producto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -54,7 +55,7 @@ class AdminViewModel : ViewModel() {
             descripcion = descripcion,
             precio = precio,
             categoria = categoria,
-            imagenId = com.example.proyecto2.R.drawable.depto_centro // Imagen de placeholder
+            imagenId = R.drawable.depto_centro // Imagen de placeholder
         )
 
         // Actualizo el estado de mi UI, añadiendo el nuevo producto a la lista.

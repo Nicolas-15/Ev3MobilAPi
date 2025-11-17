@@ -1,8 +1,8 @@
 // En: app/src/main/java/com/example/proyecto2/ui/viewmodels/ClientViewModel.kt
-package com.example.proyecto2.ui.viewmodels
+package com.example.proyecto2.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.example.proyecto2.model.Producto
+import com.example.proyecto2.data.model.Producto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

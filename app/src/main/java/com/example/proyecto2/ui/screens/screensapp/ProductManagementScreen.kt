@@ -2,7 +2,7 @@
 
 @file:Suppress("DEPRECATION")
 
-package com.example.proyecto2.ui.screens
+package com.example.proyecto2.ui.screens.screensapp
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,8 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.proyecto2.model.Producto
-import com.example.proyecto2.ui.viewmodels.AdminViewModel
+import com.example.proyecto2.data.model.Producto
+import com.example.proyecto2.viewmodels.AdminViewModel
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale

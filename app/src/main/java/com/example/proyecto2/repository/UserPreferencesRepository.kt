@@ -1,5 +1,5 @@
 // En: app/src/main/java/com/example/proyecto2/data/datastore/UserPreferencesRepository.kt
-package com.example.proyecto2.data.dataStore
+package com.example.proyecto2.repository
 
 import android.content.Context
 import androidx.datastore.core.DataStore

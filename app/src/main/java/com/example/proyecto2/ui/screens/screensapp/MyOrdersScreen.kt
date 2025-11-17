@@ -1,6 +1,6 @@
 // Contenido COMPLETO para: app/src/main/java/com/example/proyecto2/ui/screens/MyOrdersScreen.kt
 
-package com.example.proyecto2.ui.screens
+package com.example.proyecto2.ui.screens.screensapp
 
 // Mis imports necesarios para la pantalla
 import androidx.compose.foundation.layout.*
@@ -16,8 +16,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.proyecto2.model.Producto // Importo mi modelo de datos
-import com.example.proyecto2.ui.viewmodels.ClientViewModel // Importo el ViewModel que controla la lógica
+import com.example.proyecto2.data.model.Producto // Importo mi modelo de datos
+import com.example.proyecto2.viewmodels.ClientViewModel // Importo el ViewModel que controla la lógica
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -20,8 +20,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.proyecto2.ui.viewmodels.LoginViewModel
-import com.example.proyecto2.ui.viewmodels.LoginViewModelFactory // <-- IMPORTANTE: Importa la nueva Factory
+import com.example.proyecto2.viewmodels.LoginViewModel
+import com.example.proyecto2.viewmodels.LoginViewModelFactory // <-- IMPORTANTE: Importa la nueva Factory
 import kotlinx.coroutines.delay
 import com.example.proyecto2.R
 

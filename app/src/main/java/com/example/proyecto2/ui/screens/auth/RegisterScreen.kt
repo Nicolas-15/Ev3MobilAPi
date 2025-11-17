@@ -21,8 +21,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.proyecto2.R
-import com.example.proyecto2.ui.viewmodels.RegisterViewModel
-import com.example.proyecto2.ui.viewmodels.RegisterViewModelFactory // <-- IMPORTANTE: Importa la nueva Factory
+import com.example.proyecto2.viewmodels.RegisterViewModel
+import com.example.proyecto2.viewmodels.RegisterViewModelFactory // <-- IMPORTANTE: Importa la nueva Factory
 import kotlinx.coroutines.delay
 
 @Composable

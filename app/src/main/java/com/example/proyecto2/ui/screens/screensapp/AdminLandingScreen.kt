@@ -1,4 +1,4 @@
-package com.example.proyecto2.ui.screens
+package com.example.proyecto2.ui.screens.screensapp
 
 //Importaciones para iconos nuevos de las tarjetas
 import androidx.compose.foundation.layout.Arrangement

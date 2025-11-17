@@ -1,4 +1,4 @@
-package com.example.proyecto2.ui.screens
+package com.example.proyecto2.ui.screens.screensapp
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.proyecto2.data.FakeProductDataSource
-import com.example.proyecto2.model.Producto
+import com.example.proyecto2.data.model.Producto
 
 //Realizamos cambios a la productCard debido a problemas en la muestra de los productos
 // Ahora no tiene el onClick Vacio y se ejecuta la funcion pasando el mismo producto

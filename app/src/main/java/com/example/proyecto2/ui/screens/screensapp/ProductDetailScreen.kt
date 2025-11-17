@@ -2,7 +2,7 @@
 
 @file:Suppress("DEPRECATION")
 
-package com.example.proyecto2.ui.screens
+package com.example.proyecto2.ui.screens.screensapp
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -37,7 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.proyecto2.data.FakeProductDataSource
-import com.example.proyecto2.ui.viewmodels.ClientViewModel
+import com.example.proyecto2.viewmodels.ClientViewModel
 import java.text.NumberFormat
 import java.util.Locale
 

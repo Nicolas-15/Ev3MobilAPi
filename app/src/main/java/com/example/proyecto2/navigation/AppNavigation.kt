@@ -25,16 +25,16 @@ import androidx.navigation.navArgument
 import com.example.proyecto2.MainActivity
 
 // --- Mis Imports para las pantallas y ViewModels ---
-import com.example.proyecto2.ui.screens.AdminLandingScreen
-import com.example.proyecto2.ui.screens.CatalogScreen
-import com.example.proyecto2.ui.screens.ClientHomeScreen
-import com.example.proyecto2.ui.screens.MyOrdersScreen
-import com.example.proyecto2.ui.screens.ProductDetailScreen
-import com.example.proyecto2.ui.screens.ProductManagementScreen // <-- Import para mi nueva pantalla de admin
+import com.example.proyecto2.ui.screens.screensapp.AdminLandingScreen
+import com.example.proyecto2.ui.screens.screensapp.CatalogScreen
+import com.example.proyecto2.ui.screens.screensapp.ClientHomeScreen
+import com.example.proyecto2.ui.screens.screensapp.MyOrdersScreen
+import com.example.proyecto2.ui.screens.screensapp.ProductDetailScreen
+import com.example.proyecto2.ui.screens.screensapp.ProductManagementScreen // <-- Import para mi nueva pantalla de admin
 import com.example.proyecto2.ui.screens.auth.LoginScreen
 import com.example.proyecto2.ui.screens.auth.RegisterScreen
-import com.example.proyecto2.ui.viewmodels.AdminViewModel // <-- Import para mi nuevo ViewModel de admin
-import com.example.proyecto2.ui.viewmodels.ClientViewModel
+import com.example.proyecto2.viewmodels.AdminViewModel // <-- Import para mi nuevo ViewModel de admin
+import com.example.proyecto2.viewmodels.ClientViewModel
 
 object AppNavigations{
     // Rutas de autenticación

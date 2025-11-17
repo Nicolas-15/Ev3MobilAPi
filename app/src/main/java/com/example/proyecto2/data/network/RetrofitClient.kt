@@ -1,16 +1,15 @@
-package com.example.proyecto2.network
+package com.example.proyecto2.data.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitClient {
-    private const val BASE_URL = "https://jsonplaceholder.typicode.com/"
-
-    val instance: ApiService by lazy {
+object RetrofitInstance {
+    val api: ApiService by lazy {
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl("https://jsonplaceholder.typicode.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiService::class.java)
     }
+
 }

@@ -1,4 +1,4 @@
-package com.example.proyecto2.model
+package com.example.proyecto2.data.model
 
 import androidx.annotation.DrawableRes
 

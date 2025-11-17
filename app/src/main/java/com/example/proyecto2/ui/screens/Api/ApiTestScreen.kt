@@ -1,28 +1,23 @@
-package com.example.proyecto2.ui.screens.Api
+package com.example.proyecto2.ui.screens.api
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.proyecto2.ui.viewmodels.PostViewModel
+import com.example.proyecto2.viewmodels.PostViewModel
 
 @Composable
-fun PostScreen(viewModel: PostViewModel = viewModel()) {
-    val posts by viewModel.posts.observeAsState(emptyList())
-    val isLoading by viewModel.isLoading.observeAsState(false)
+fun TestApiScreen(viewModel: PostViewModel = viewModel()) {
 
-    // Llamamos a la función de carga al iniciar la pantalla
-    LaunchedEffect(Unit) {
-        viewModel.fetchPosts()
-    }
+    // StateFlow se observa así:
+    val posts = viewModel.postList.collectAsState()
 
-    if (isLoading) {
+    if (posts.value.isEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -33,21 +28,20 @@ fun PostScreen(viewModel: PostViewModel = viewModel()) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp)
+                .padding(12.dp)
         ) {
-            items(posts) { post ->
+            items(posts.value) { post ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(4.dp),
-                    elevation = CardDefaults.cardElevation(6.dp)
+                        .padding(vertical = 6.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
                             text = post.title,
                             style = MaterialTheme.typography.titleMedium
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
                         Text(
                             text = post.body,
                             style = MaterialTheme.typography.bodyMedium

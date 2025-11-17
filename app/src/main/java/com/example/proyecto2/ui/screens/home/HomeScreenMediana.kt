@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.proyecto2.model.Producto
-import com.example.proyecto2.ui.screens.ContenidoPrincipal
+import com.example.proyecto2.data.model.Producto
+import com.example.proyecto2.ui.screens.screensapp.ContenidoPrincipal
 
 @Composable
 fun HomeScreenMediana(
