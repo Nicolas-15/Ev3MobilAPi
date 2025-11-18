@@ -1,5 +1,4 @@
-// Contenido para: app/src/main/java/com/example/proyecto2/ui/screens/HomeScreenCompacta.kt
-
+// app/src/main/java/com/example/proyecto2/ui/screens/home/HomeScreenCompacta.kt
 package com.example.proyecto2.ui.screens.home
 
 import androidx.compose.foundation.layout.Box
@@ -23,13 +22,13 @@ import com.example.proyecto2.ui.screens.screensapp.ContenidoPrincipal
 @Composable
 fun HomeScreenCompacta(
     navController: NavController,
-    onProductClicked: (Producto) -> Unit // <-- Recibe la acción de clic
+    onProductClicked: (Producto) -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Box(modifier = Modifier.fillMaxWidth()){
+                    Box(modifier = Modifier.fillMaxWidth()) {
                         Text("Catálogo", modifier = Modifier.align(Alignment.Center))
                     }
                 }
