@@ -1,6 +1,5 @@
 package com.example.proyecto2.ui.screens.screensapp
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,7 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,33 +17,82 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.proyecto2.data.FakeProductDataSource
 import com.example.proyecto2.data.model.Producto
+import com.example.proyecto2.data.network.MyApiRetrofitClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+// 1. Definimos los estados posibles de la UI para la carga de datos
+sealed interface ProductListUiState {
+    data class Success(val products: List<Producto>) : ProductListUiState
+    object Error : ProductListUiState
+    object Loading : ProductListUiState
+}
 
 @Composable
 fun ContenidoPrincipal(
     modifier: Modifier = Modifier,
     onProductClicked: (Producto) -> Unit
 ) {
-    val productosPorCategoria = FakeProductDataSource.productos.groupBy { it.categoria }
+    // 2. Creamos una variable de estado para manejar la UI
+    var uiState by remember { mutableStateOf<ProductListUiState>(ProductListUiState.Loading) }
 
-    LazyColumn(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.background),
-        contentPadding = PaddingValues(vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(32.dp)
-    ) {
-        items(productosPorCategoria.entries.toList()) { (categoria, productos) ->
-            CategoriaRow(
-                categoria = categoria,
-                productos = productos,
-                onProductClicked = onProductClicked
-            )
+    // 3. LaunchedEffect ejecuta la llamada de red UNA SOLA VEZ cuando el Composable aparece
+    LaunchedEffect(Unit) {
+        uiState = try {
+            // Cambiamos al hilo de IO para la llamada de red (buena práctica)
+            val products = withContext(Dispatchers.IO) {
+                MyApiRetrofitClient.api.getProducts()
+            }
+            ProductListUiState.Success(products)
+        } catch (e: Exception) {
+            // Si algo falla (servidor apagado, no hay internet), cambiamos al estado de Error
+            // Imprimimos el error para poder depurar
+            e.printStackTrace()
+            ProductListUiState.Error
+        }
+    }
+
+    // 4. Renderizamos la UI según el estado actual
+    when (val currentState = uiState) {
+        is ProductListUiState.Loading -> {
+            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
+        is ProductListUiState.Error -> {
+            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Error al cargar los productos. \nAsegúrate de que el servidor esté encendido.")
+            }
+        }
+        is ProductListUiState.Success -> {
+            if (currentState.products.isEmpty()) {
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("No hay productos disponibles en este momento.")
+                }
+            } else {
+                val productosPorCategoria = currentState.products.groupBy { it.categoria }
+                LazyColumn(
+                    modifier = modifier
+                        .background(MaterialTheme.colorScheme.background),
+                    contentPadding = PaddingValues(vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(32.dp)
+                ) {
+                    items(productosPorCategoria.entries.toList()) { (categoria, productos) ->
+                        CategoriaRow(
+                            categoria = categoria,
+                            productos = productos,
+                            onProductClicked = onProductClicked
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -57,7 +105,6 @@ fun CategoriaRow(
     onProductClicked: (Producto) -> Unit
 ) {
     Column(modifier = modifier) {
-        // Header de categoría mejorado
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -116,22 +163,19 @@ fun ProductoCardModerno(
         onClick = { onProductClicked(producto) }
     ) {
         Column {
-            // Imagen con overlay de gradiente
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
             ) {
-                Image(
-                    painter = painterResource(id = producto.imagenId),
+                AsyncImage(
+                    model = producto.imagen,
                     contentDescription = "Imagen de ${producto.nombre}",
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(16.dp)),
                     contentScale = ContentScale.Crop
                 )
-
-                // Gradiente overlay
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -145,8 +189,6 @@ fun ProductoCardModerno(
                             )
                         )
                 )
-
-                // Badge de precio
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
@@ -165,8 +207,6 @@ fun ProductoCardModerno(
                     )
                 }
             }
-
-            // Contenido de la card
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
@@ -178,9 +218,7 @@ fun ProductoCardModerno(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-
                 Spacer(modifier = Modifier.height(4.dp))
-
                 Text(
                     text = producto.descripcion,
                     style = MaterialTheme.typography.bodyMedium,
@@ -188,16 +226,12 @@ fun ProductoCardModerno(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
-                // Rating y acciones
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // Rating
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -214,8 +248,6 @@ fun ProductoCardModerno(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-
-                    // Botón de acción
                     Text(
                         text = "Ver detalles →",
                         style = MaterialTheme.typography.bodySmall,
@@ -228,7 +260,6 @@ fun ProductoCardModerno(
     }
 }
 
-// Mantén la versión original por si acaso
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductoCard(
@@ -242,8 +273,8 @@ fun ProductoCard(
         onClick = { onProductClicked(producto) }
     ) {
         Column {
-            Image(
-                painter = painterResource(id = producto.imagenId),
+            AsyncImage(
+                model = producto.imagen,
                 contentDescription = "Imagen de ${producto.nombre}",
                 modifier = Modifier
                     .fillMaxWidth()
@@ -266,8 +297,22 @@ fun ProductoCard(
     }
 }
 
-@Preview(showSystemUi = true, name = "Contenido Principal Moderno")
+@Preview(showSystemUi = true, name = "Contenido Principal (Preview con Datos Falsos)")
 @Composable
 fun PreviewContenidoPrincipalModerno() {
-    ContenidoPrincipal(onProductClicked = {})
+    // La preview ahora solo muestra el estado de éxito con datos falsos
+    val productosPorCategoria = FakeProductDataSource.productos.groupBy { it.categoria }
+    LazyColumn(
+        modifier = Modifier.background(MaterialTheme.colorScheme.background),
+        contentPadding = PaddingValues(vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(32.dp)
+    ) {
+        items(productosPorCategoria.entries.toList()) { (categoria, productos) ->
+            CategoriaRow(
+                categoria = categoria,
+                productos = productos,
+                onProductClicked = {}
+            )
+        }
+    }
 }

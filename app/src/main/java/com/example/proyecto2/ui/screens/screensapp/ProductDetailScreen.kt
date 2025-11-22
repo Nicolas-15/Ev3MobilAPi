@@ -5,7 +5,6 @@
 package com.example.proyecto2.ui.screens.screensapp
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -33,9 +32,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.proyecto2.data.FakeProductDataSource
 import com.example.proyecto2.viewmodels.ClientViewModel
 import java.text.NumberFormat
@@ -77,8 +76,8 @@ fun ProductDetailScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            Image(
-                painter = painterResource(id = producto.imagenId),
+            AsyncImage(
+                model = producto.imagen,
                 contentDescription = "Imagen de ${producto.nombre}",
                 modifier = Modifier
                     .fillMaxWidth()

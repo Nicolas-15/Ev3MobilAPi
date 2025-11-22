@@ -3,7 +3,6 @@
 package com.example.proyecto2.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.example.proyecto2.R
 import com.example.proyecto2.data.FakeProductDataSource
 import com.example.proyecto2.data.model.Producto
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,14 +47,15 @@ class AdminViewModel : ViewModel() {
         val nuevoId = (_uiState.value.productos.maxOfOrNull { it.id } ?: 0) + 1
 
         // Creo el objeto del nuevo producto.
-        // Como no tengo un selector de imágenes aún, le asigno una imagen por defecto.
         val nuevoProducto = Producto(
             id = nuevoId,
             nombre = nombre,
             descripcion = descripcion,
             precio = precio,
             categoria = categoria,
-            imagenId = R.drawable.depto_centro // Imagen de placeholder
+            // ¡CORRECCIÓN! Usamos "imagen" (String) en lugar de "imagenId" (Int).
+            // Le ponemos una URL de placeholder mientras no tengamos un selector de imágenes real.
+            imagen = "https://via.placeholder.com/400x300.png?text=Nueva+Propiedad"
         )
 
         // Actualizo el estado de mi UI, añadiendo el nuevo producto a la lista.
