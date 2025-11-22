@@ -10,6 +10,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,7 +50,8 @@ fun ContenidoPrincipal(
         uiState = try {
             // Cambiamos al hilo de IO para la llamada de red (buena práctica)
             val products = withContext(Dispatchers.IO) {
-                MyApiRetrofitClient.api.getProducts()
+                // --- CORRECCIÓN AQUÍ: Se usa '.instance' en lugar de '.api' ---
+                MyApiRetrofitClient.instance.getProducts()
             }
             ProductListUiState.Success(products)
         } catch (e: Exception) {
@@ -84,7 +87,7 @@ fun ContenidoPrincipal(
                     contentPadding = PaddingValues(vertical = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(32.dp)
                 ) {
-                    items(productosPorCategoria.entries.toList()) { (categoria, productos) ->
+                    items(productosPorCategoria.entries.toList()) { (categoria: String, productos: List<Producto>) ->
                         CategoriaRow(
                             categoria = categoria,
                             productos = productos,
@@ -307,7 +310,7 @@ fun PreviewContenidoPrincipalModerno() {
         contentPadding = PaddingValues(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
-        items(productosPorCategoria.entries.toList()) { (categoria, productos) ->
+        items(productosPorCategoria.entries.toList()) { (categoria: String, productos: List<Producto>) ->
             CategoriaRow(
                 categoria = categoria,
                 productos = productos,
