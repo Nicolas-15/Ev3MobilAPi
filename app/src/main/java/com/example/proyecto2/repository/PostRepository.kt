@@ -3,8 +3,8 @@ import com.example.proyecto2.data.model.Post
 import com.example.proyecto2.data.network.RetrofitInstance
 
 
-class PostRepository {
-    suspend fun getPosts(): List<Post>{
-        return RetrofitInstance.api.getPost()
+open class PostRepository {
+    open suspend fun getPosts(): List<Post>{
+        return RetrofitInstance.api.getPosts()
     }
 }

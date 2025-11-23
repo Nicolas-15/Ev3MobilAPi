@@ -6,9 +6,8 @@ import retrofit2.http.GET
 
 interface ApiService {
     @GET("/posts")
-    suspend fun getPost(): List<Post>
+    suspend fun getPosts(): List<Post>
 
-    // Apuntamos al endpoint del backend que devuelve la lista de productos
     @GET("productos")
     suspend fun getProducts(): List<Producto>
 }

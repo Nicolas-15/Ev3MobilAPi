@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.proyecto2.data.FakeProductDataSource
 import com.example.proyecto2.data.model.Producto
-import com.example.proyecto2.data.network.MyApiRetrofitClient
+import com.example.proyecto2.data.network.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -50,8 +50,7 @@ fun ContenidoPrincipal(
         uiState = try {
             // Cambiamos al hilo de IO para la llamada de red (buena práctica)
             val products = withContext(Dispatchers.IO) {
-                // --- CORRECCIÓN AQUÍ: Se usa '.instance' en lugar de '.api' ---
-                MyApiRetrofitClient.instance.getProducts()
+                RetrofitInstance.api.getProducts()
             }
             ProductListUiState.Success(products)
         } catch (e: Exception) {
@@ -310,7 +309,7 @@ fun PreviewContenidoPrincipalModerno() {
         contentPadding = PaddingValues(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
-        items(productosPorCategoria.entries.toList()) { (categoria: String, productos: List<Producto>) ->
+        items(productosPorCategoria.entries.toList()) { (categoria, productos) ->
             CategoriaRow(
                 categoria = categoria,
                 productos = productos,

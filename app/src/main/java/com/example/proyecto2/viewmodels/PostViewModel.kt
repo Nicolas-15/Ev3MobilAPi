@@ -8,25 +8,28 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class PostViewModel : ViewModel() {
+// Modifica la clase para que acepte el repositorio en el constructor
+// Dale un valor por defecto para que no rompa tu código actual.
+open class PostViewModel(
+    private val repository: PostRepository = PostRepository()
+) : ViewModel() {
 
-    private val repository = PostRepository()
-    // Flujo mutable que contiene la lista de posts
-    private val _postList = MutableStateFlow<List<Post>>(value = emptyList())
-    // Flujo público de solo lectura
-    val postList: StateFlow<List<Post>> = _postList
+    // Ya no necesitas crearlo aquí
+    // private val repository = PostRepository()
 
-    // Se llama automáticamente al iniciar
+    protected val _postList = MutableStateFlow<List<Post>>(emptyList())
+    open val postList: StateFlow<List<Post>> = _postList
+
     init {
         fetchPosts()
     }
 
-    // Función que obtiene los datos en segundo plano
-    private fun fetchPosts() {
+    open fun fetchPosts() {
         viewModelScope.launch {
             try {
                 _postList.value = repository.getPosts()
             } catch (e: Exception) {
+                // Manejo de errores
                 println("Error al obtener datos: ${e.localizedMessage}")
             }
         }

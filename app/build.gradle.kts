@@ -40,6 +40,23 @@ android {
     buildFeatures {
         compose = true
     }
+    
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "win32-x86-64/attach_hotspot_windows.dll"
+            excludes += "win32-x86/attach_hotspot_windows.dll"
+            excludes += "META-INF/licenses/ASM"
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+        }
+    }
 }
 
 dependencies {
@@ -84,15 +101,25 @@ dependencies {
 
     // --- Testing ---
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // ---Kotest---
+    androidTestImplementation("io.kotest:kotest-runner-junit5:5.8.0")
+    androidTestImplementation("io.kotest:kotest-assertions-core:5.8.0")
+
+    // ---JUnit5---
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+
+    // ---MockK---
+    androidTestImplementation("io.mockk:mockk:1.13.10")
+    androidTestImplementation("io.mockk:mockk-android:1.13.10")
 
     // --- Debug ---
     debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     // --- ViewModel y LiveData para Compose ---
-    implementation("androidx.compose.runtime:runtime-livedata:1.7.4") // 🔹 ESTA ES LA QUE FALTA
-
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.4")
 }
