@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,21 +29,16 @@ fun HomeScreenCompacta(
                     Box(modifier = Modifier.fillMaxWidth()) {
                         Text("Catálogo", modifier = Modifier.align(Alignment.Center))
                     }
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Volver atrás"
+                        )
+                    }
                 }
             )
-        },
-        bottomBar = {
-            BottomAppBar {
-                IconButton(onClick = { /* TODO */ }, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Default.Home, contentDescription = "Inicio")
-                }
-                IconButton(onClick = { /* TODO */ }, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Default.Search, contentDescription = "Buscar")
-                }
-                IconButton(onClick = { /* TODO */ }, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Default.Settings, contentDescription = "Ajustes")
-                }
-            }
         }
     ) { innerPadding ->
         ContenidoPrincipal(

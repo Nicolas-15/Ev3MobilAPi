@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.proyecto2.data.model.Producto
-import com.example.proyecto2.data.network.RetrofitInstance
+import com.example.proyecto2.data.network.MyApiRetrofitClient // Importamos el cliente para nuestro backend
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -41,7 +41,7 @@ class ClientViewModel : ViewModel() {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
                 // Llamamos a nuestro backend usando el cliente de Retrofit correcto
-                val listaDeLaApi = RetrofitInstance.api.getProducts()
+                val listaDeLaApi = MyApiRetrofitClient.instance.getProducts()
 
                 // Si la llamada es exitosa, actualizamos el estado con la nueva lista
                 _uiState.update { currentState ->
@@ -51,7 +51,7 @@ class ClientViewModel : ViewModel() {
                     )
                 }
             } catch (e: IOException) {
-                // CORRECIÓN: Usamos el parámetro 'e' para registrar el error en el Logcat.
+                // CORRECCIÓN: Usamos el parámetro 'e' para registrar el error en el Logcat.
                 Log.e("ClientViewModel", "Error de red al cargar productos: ${e.message}")
                 // Manejamos errores de red
                 _uiState.update { currentState ->
@@ -61,7 +61,7 @@ class ClientViewModel : ViewModel() {
                     )
                 }
             } catch (e: Exception) {
-                // CORRECIÓN: Usamos el parámetro 'e' para registrar el error en el Logcat.
+                // CORRECCIÓN: Usamos el parámetro 'e' para registrar el error en el Logcat.
                 Log.e("ClientViewModel", "Error inesperado al cargar productos: ${e.message}")
                 // Manejamos cualquier otro error
                 _uiState.update { currentState ->

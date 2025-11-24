@@ -1,13 +1,6 @@
-// Contenido COMPLETO para: app/src/main/java/com/example/proyecto2/navigation/AppNavigation.kt
-
 package com.example.proyecto2.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,29 +16,26 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.example.proyecto2.MainActivity
-
-// --- Mis Imports para las pantallas y ViewModels ---
-import com.example.proyecto2.ui.screens.screensapp.AdminLandingScreen
-import com.example.proyecto2.ui.screens.screensapp.CatalogScreen
-import com.example.proyecto2.ui.screens.screensapp.ClientHomeScreen
-import com.example.proyecto2.ui.screens.screensapp.MyOrdersScreen
-import com.example.proyecto2.ui.screens.screensapp.ProductDetailScreen
-import com.example.proyecto2.ui.screens.screensapp.ProductManagementScreen // <-- Import para mi nueva pantalla de admin
 import com.example.proyecto2.ui.screens.auth.LoginScreen
 import com.example.proyecto2.ui.screens.auth.RegisterScreen
-import com.example.proyecto2.viewmodels.AdminViewModel // <-- Import para mi nuevo ViewModel de admin
+import com.example.proyecto2.ui.screens.screensapp.*
+import com.example.proyecto2.viewmodels.AdminViewModel
 import com.example.proyecto2.viewmodels.ClientViewModel
 
-object AppNavigations{
+/**
+ * Objeto que centraliza todas las rutas de navegación de la aplicación.
+ * Usar un objeto como este previene errores de tipeo en las rutas y facilita su mantenimiento.
+ */
+object AppNavigations {
     // Rutas de autenticación
     const val LOGIN_ROUTE = "login"
     const val REGISTER_ROUTE = "register"
 
     // Rutas principales post-login
     const val ADMIN_LANDING_ROUTE = "admin_landing"
-    const val CLIENT_GRAPH_ROUTE = "client_graph"
+    const val CLIENT_GRAPH_ROUTE = "client_graph" // Ruta para el grafo de navegación del cliente
 
-    // Sub-rutas de Cliente
+    // Sub-rutas del grafo de Cliente
     const val CLIENT_HOME_ROUTE = "client_home"
     const val CATALOG_ROUTE = "client_catalog"
     const val MY_ORDERS_ROUTE = "client_my_orders"
@@ -57,34 +47,42 @@ object AppNavigations{
     const val ORDERS_ROUTE = "admin_orders"
 }
 
+/**
+ * `AppNavHost` es el Composable central que gestiona la navegación de toda la aplicación.
+ * Define qué pantalla (`Composable`) se muestra para cada ruta.
+ *
+ * @param navController El controlador que gestiona el estado de la navegación (la pila de pantallas).
+ * @param activity La instancia de `MainActivity`, necesaria para algunas funcionalidades como `calculateWindowSizeClass`.
+ * @param startDestination La ruta inicial que se mostrará al lanzar la aplicación.
+ */
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     activity: MainActivity,
     startDestination: String = AppNavigations.LOGIN_ROUTE
 ) {
-    // --- 1. Aquí creo las instancias de MIS ViewModels ---
-    // El ciclo de vida de estos ViewModels está ligado a AppNavHost,
-    // por lo que persisten mientras la app esté abierta y puedo compartirlos.
+    // Creación de las instancias de los ViewModels.
+    // Al crearlos aquí con `viewModel()`, su ciclo de vida se asocia al del `AppNavHost`.
+    // Esto permite que un mismo ViewModel sea compartido por varias pantallas, manteniendo el estado.
     val clientViewModel: ClientViewModel = viewModel()
-    val adminViewModel: AdminViewModel = viewModel() // <-- Aquí instancio el de admin
+    val adminViewModel: AdminViewModel = viewModel()
 
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        // --- NAVEGACIÓN DE AUTENTICACIÓN (Sin cambios) ---
+        // --- NAVEGACIÓN DE AUTENTICACIÓN ---
         composable(AppNavigations.LOGIN_ROUTE) {
             LoginScreen(
-                onNavigateToRegister = {
-                    navController.navigate(AppNavigations.REGISTER_ROUTE)
-                },
+                onNavigateToRegister = { navController.navigate(AppNavigations.REGISTER_ROUTE) },
                 onLoginSuccessAsAdmin = {
+                    // Navega a la pantalla de admin y limpia la pila de navegación anterior.
                     navController.navigate(AppNavigations.ADMIN_LANDING_ROUTE) {
                         popUpTo(AppNavigations.LOGIN_ROUTE) { inclusive = true }
                     }
                 },
                 onLoginSuccessAsClient = {
+                    // Navega al grafo de cliente y limpia la pila de navegación anterior.
                     navController.navigate(AppNavigations.CLIENT_GRAPH_ROUTE) {
                         popUpTo(AppNavigations.LOGIN_ROUTE) { inclusive = true }
                     }
@@ -93,7 +91,7 @@ fun AppNavHost(
         }
         composable(AppNavigations.REGISTER_ROUTE) {
             RegisterScreen(
-                onRegisterSuccess = { navController.popBackStack() },
+                onRegisterSuccess = { navController.popBackStack() }, // Vuelve a Login después de un registro exitoso.
                 onNavigateBackToLogin = { navController.popBackStack() }
             )
         }
@@ -105,25 +103,25 @@ fun AppNavHost(
                 onNavigateToInventory = { navController.navigate(AppNavigations.INVENTORY_ROUTE) },
                 onNavigateToOrders = { navController.navigate(AppNavigations.ORDERS_ROUTE) },
                 onNavigateToRoleSelection = {
+                    // Cierra sesión y vuelve a la pantalla de Login.
                     navController.navigate(AppNavigations.LOGIN_ROUTE) {
                         popUpTo(AppNavigations.ADMIN_LANDING_ROUTE) { inclusive = true }
                     }
                 }
             )
         }
-
-        // --- 2. AQUÍ ESTÁ EL CAMBIO IMPORTANTE ---
-        // He reemplazado el PlaceholderScreen por mi nueva pantalla de gestión.
         composable(AppNavigations.PRODUCT_ROUTE) {
             ProductManagementScreen(
-                viewModel = adminViewModel, // Le paso el ViewModel que he creado arriba
+                viewModel = adminViewModel, // Comparte el ViewModel de Admin.
                 onNavigateBack = { navController.popBackStack() }
             )
         }
 
-        // --- GRAFO DE NAVEGACIÓN ANIDADO PARA CLIENTE (Sin cambios) ---
+        // --- GRAFO DE NAVEGACIÓN ANIDADO PARA CLIENTE ---
+        // Agrupa todas las pantallas relacionadas con el cliente bajo una misma ruta (`CLIENT_GRAPH_ROUTE`).
+        // Esto ayuda a organizar el código y a manejar la pila de navegación de forma más limpia.
         navigation(
-            startDestination = AppNavigations.CLIENT_HOME_ROUTE,
+            startDestination = AppNavigations.CLIENT_HOME_ROUTE, // La primera pantalla del grafo de cliente.
             route = AppNavigations.CLIENT_GRAPH_ROUTE
         ) {
             composable(AppNavigations.CLIENT_HOME_ROUTE) {
@@ -131,6 +129,7 @@ fun AppNavHost(
                     onNavigateToCatalog = { navController.navigate(AppNavigations.CATALOG_ROUTE) },
                     onNavigateToMyOrders = { navController.navigate(AppNavigations.MY_ORDERS_ROUTE) },
                     onNavigateToRoleSelection = {
+                        // Cierra sesión y vuelve a la pantalla de Login.
                         navController.navigate(AppNavigations.LOGIN_ROUTE) {
                             popUpTo(AppNavigations.CLIENT_GRAPH_ROUTE) { inclusive = true }
                         }
@@ -138,32 +137,40 @@ fun AppNavHost(
                 )
             }
             composable(AppNavigations.CATALOG_ROUTE) {
-                CatalogScreen(navController = navController, activity = activity)
+                // Llama a la pantalla que decide qué layout mostrar (compacto o mediano).
+                CatalogScreen(
+                    navController = navController,
+                    activity = activity
+                )
             }
             composable(
-                route = "${AppNavigations.PRODUCT_DETAIL_ROUTE}/{productoId}",
-                arguments = listOf(navArgument("productoId") { type = NavType.IntType })
+                route = "${AppNavigations.PRODUCT_DETAIL_ROUTE}/{productoId}", // Define una ruta con un argumento dinámico.
+                arguments = listOf(navArgument("productoId") { type = NavType.IntType }) // Especifica el tipo del argumento.
             ) { backStackEntry ->
+                // Extrae el ID del producto de los argumentos de la ruta.
                 val productoId = backStackEntry.arguments?.getInt("productoId")
                 if (productoId != null) {
                     ProductDetailScreen(
                         productoId = productoId,
-                        viewModel = clientViewModel,
-                        onNavigateBack = { navController.popBackStack() }
+                        viewModel = clientViewModel, // Comparte el ViewModel de Cliente.
+                        onNavigateBack = { navController.popBackStack() },
+                        // Define la acción para el botón "VER LISTA" del Snackbar.
+                        onNavigateToMyOrders = { navController.navigate(AppNavigations.MY_ORDERS_ROUTE) }
                     )
                 } else {
+                    // Si el ID no es válido, simplemente vuelve a la pantalla anterior.
                     navController.popBackStack()
                 }
             }
             composable(AppNavigations.MY_ORDERS_ROUTE) {
                 MyOrdersScreen(
-                    viewModel = clientViewModel,
+                    viewModel = clientViewModel, // Comparte el ViewModel de Cliente.
                     onNavigateBack = { navController.popBackStack() }
                 )
             }
         }
 
-        // --- Mis otras pantallas Placeholder de Admin (se quedan así por ahora) ---
+        // --- Pantallas Placeholder de Admin (sin implementar) ---
         composable(AppNavigations.INVENTORY_ROUTE) {
             PlaceholderScreen(screenName = "Gestión de Inventario") { navController.popBackStack() }
         }
@@ -173,7 +180,11 @@ fun AppNavHost(
     }
 }
 
-// Mi Composable genérico para las pantallas no implementadas (sin cambios)
+/**
+ * Composable genérico para mostrar en pantallas que aún no han sido implementadas.
+ * @param screenName El nombre de la pantalla a mostrar.
+ * @param onNavigate Lambda para el botón de "Volver".
+ */
 @Composable
 fun PlaceholderScreen(screenName: String, onNavigate: () -> Unit) {
     Box(
@@ -181,7 +192,7 @@ fun PlaceholderScreen(screenName: String, onNavigate: () -> Unit) {
             .fillMaxSize()
             .padding(16.dp),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = "Pantalla de:", style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(8.dp))

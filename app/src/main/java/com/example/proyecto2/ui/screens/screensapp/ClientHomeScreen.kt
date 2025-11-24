@@ -38,8 +38,13 @@ import androidx.compose.ui.unit.dp
 import com.example.proyecto2.ui.theme.Proyecto2Theme
 
 /**
- * Pantalla principal para el rol de Cliente.
- * Ofrece acceso a las funcionalidades clave del cliente.
+ * Pantalla principal para el usuario con rol de "Cliente".
+ * Funciona como un menú central desde donde el cliente puede acceder a las
+ * principales secciones de la aplicación, como el catálogo de productos y sus pedidos.
+ *
+ * @param onNavigateToCatalog Lambda que define la acción de navegación hacia la pantalla del catálogo.
+ * @param onNavigateToMyOrders Lambda que define la acción de navegación hacia la pantalla de "Mis Pedidos".
+ * @param onNavigateToRoleSelection Lambda que define la acción para "cerrar sesión" y volver a la pantalla de selección de rol.
  */
 @Composable
 fun ClientHomeScreen(
@@ -54,12 +59,12 @@ fun ClientHomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        // --- Cabecera mejorada ---
+        // --- Cabecera de bienvenida ---
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(vertical = 16.dp)
         ) {
-            // Icono decorativo simple
+            // Icono decorativo que representa una tienda o catálogo.
             Box(
                 modifier = Modifier
                     .size(70.dp)
@@ -69,7 +74,7 @@ fun ClientHomeScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Storefront,
-                    contentDescription = null,
+                    contentDescription = null, // Es decorativo, no necesita descripción.
                     modifier = Modifier.size(32.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -77,6 +82,7 @@ fun ClientHomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Mensaje de bienvenida principal.
             Text(
                 text = "¡Hola Cliente!",
                 style = MaterialTheme.typography.headlineLarge.copy(
@@ -88,6 +94,7 @@ fun ClientHomeScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Subtítulo o mensaje secundario.
             Text(
                 text = "¿Qué te gustaría hacer hoy?",
                 style = MaterialTheme.typography.titleMedium,
@@ -96,30 +103,35 @@ fun ClientHomeScreen(
             )
         }
 
-        // --- Acciones Principales con diseño mejorado ---
+        // --- Tarjetas de Acción Principales ---
+        // Cada tarjeta es un punto de entrada a una sección importante de la app.
+
+        // Tarjeta para navegar al catálogo de productos.
         ImprovedActionCard(
             title = "Ver Catálogo",
             description = "Explora todos nuestros productos disponibles",
             icon = Icons.Default.Storefront,
-            onClick = onNavigateToCatalog,
+            onClick = onNavigateToCatalog, // Acción de navegación.
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
+        // Tarjeta para navegar a la pantalla de "Mis Pedidos".
         ImprovedActionCard(
-            title = "Mis Pedidos",
-            description = "Revisa tu historial y estado de pedidos",
+            title = "Mis Arriendos",
+            description = "Revisa los productos que te interesan",
             icon = Icons.AutoMirrored.Filled.ListAlt,
-            onClick = onNavigateToMyOrders,
+            onClick = onNavigateToMyOrders, // Acción de navegación.
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer
         )
 
+        // Spacer con `weight` para empujar el botón de "volver" al final de la pantalla.
         Spacer(modifier = Modifier.weight(1f))
 
-        // --- Botón para volver ---
+        // --- Botón para volver / Cerrar Sesión ---
         TextButton(
-            onClick = onNavigateToRoleSelection,
+            onClick = onNavigateToRoleSelection, // Ejecuta la acción para volver a la pantalla de Login/Selección de Rol.
             modifier = Modifier.fillMaxWidth()
         ) {
             Icon(
@@ -128,11 +140,22 @@ fun ClientHomeScreen(
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Volver atrás")
+            Text("Volver a selección de rol")
         }
     }
 }
 
+/**
+ * Composable reutilizable para crear las tarjetas de acción con un diseño mejorado.
+ * Es un buen ejemplo de cómo crear componentes de UI personalizados y reutilizables.
+ *
+ * @param title Título principal de la tarjeta.
+ * @param description Texto descriptivo secundario.
+ * @param icon Icono que se mostrará en la tarjeta.
+ * @param onClick Acción que se ejecutará al pulsar la tarjeta.
+ * @param containerColor Color de fondo de la tarjeta.
+ * @param contentColor Color para el contenido (texto e iconos) de la tarjeta.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImprovedActionCard(
@@ -160,7 +183,7 @@ fun ImprovedActionCard(
                 .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icono con fondo circular mejorado
+            // Icono principal a la izquierda.
             Box(
                 modifier = Modifier
                     .size(65.dp)
@@ -178,7 +201,7 @@ fun ImprovedActionCard(
 
             Spacer(modifier = Modifier.width(18.dp))
 
-            // Contenido de texto
+            // Contenido de texto (título y descripción).
             Column(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.weight(1f)
@@ -200,7 +223,7 @@ fun ImprovedActionCard(
                 )
             }
 
-            // Flecha indicadora mejorada
+            // Icono de flecha a la derecha como indicador visual.
             Box(
                 modifier = Modifier
                     .size(36.dp)
@@ -219,6 +242,10 @@ fun ImprovedActionCard(
     }
 }
 
+/**
+ * Función de Previsualización para `ClientHomeScreen`.
+ * Permite ver el diseño de la pantalla en Android Studio sin ejecutar la aplicación.
+ */
 @Preview(showSystemUi = true, name = "Client Home Screen")
 @Composable
 fun PreviewClientHomeScreen() {
